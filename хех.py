@@ -1,4 +1,14 @@
+"""
+Точкой входа в программу обычно везде используется main.py
+Так сразу понятно какой файл запускать
+"""
+
 from tkinter import *
+"""
+Лучше не использовать при импорте *
+тк не понятно какие функции и классы у тебя используются
++ при таком импорте подтягивается сразу все, что не есть хорошо 
+"""
 from random import randint
 
 win = Tk()
@@ -6,37 +16,66 @@ win.geometry('210x150')
 win.title('Угадай число')
 
 a = randint(1, 101)
+"""
+Лучше избегать глобальных переменных тк с ними может возникнуть неожиданные баги
+когда 1 функция ее поняет, а другой важно предыдущее значение
 
-def start():
-    global a
+Лучше не использовать название переменных с 1 буквой
+Если человек вне контекста, то нефозможно понять для чего эта переменная.
+В циклах это еще ок, но линтеры обычно и на это ругаются
+
+Попробуй запустить линтер wemake-python-styleguide
+Он довольно жесткий, но со многими принципами я согласен
+"""
+
+def start(): # Функция делает слишком много. Генерит число и что-то отрисовывает
+    global a                # global вообще лучше всегда избегать
     a = randint(1, 101)
     answer = Label(win, text='',
-                   fg='white', bg='black').grid(row=5, column=1, columnspan=10, sticky='nsew')
+                   fg='white', bg='black').grid(row=5, column=1, columnspan=10, sticky='nsew') # Переменная answer бесполезная и нигде не используется. Если ее убрать, то ничго не поменяется
 
 def lucky():
     b = int(digit.get())
     if a == b:
         answer = Label(win, text='Вы выйграли!', fg='white', bg='black').grid(row=5, column=1,
-                                                                              columnspan=10, sticky='nsew')
+                                                                              columnspan=10, sticky='nsew')# Переменная answer бесполезная и нигде не используется. Если ее убрать, то ничго не поменяется
     else:
         if a > b:
             answer = Label(win, text='Попробуйте число побольше!',
-                           fg='white', bg='black').grid(row=5, column=1,columnspan=10, sticky='nsew')
+                           fg='white', bg='black').grid(row=5, column=1,columnspan=10, sticky='nsew')# Переменная answer бесполезная и нигде не используется. Если ее убрать, то ничго не поменяется
         else:
             answer = Label(win, text='Попробуйте число поменьше!',
-                           fg='white', bg='black').grid(row=5, column=1, columnspan=10, sticky='nsew')
+                           fg='white', bg='black').grid(row=5, column=1, columnspan=10, sticky='nsew')# Переменная answer бесполезная и нигде не используется. Если ее убрать, то ничго не поменяется
 
 
-text_1 = Label(win, text='Угадайте число', fg='white', bg='black').grid(row=1, column=1, columnspan=10, sticky='nsew')
-text_2 = Label(win, text='Введите число', fg='white', bg='black').grid(row=2, column=1, columnspan=10, sticky='nsew')
+text_1 = Label(win, text='Угадайте число', fg='white', bg='black').grid(row=1, column=1, columnspan=10, sticky='nsew') # непонятные названия переменных
+text_2 = Label(win, text='Введите число', fg='white', bg='black').grid(row=2, column=1, columnspan=10, sticky='nsew') # непонятные названия переменных
 
 digit=Entry(win)
 digit.focus()
 digit.grid(row=4,column=1,columnspan=10,sticky=NSEW)
 
 
-but_1 = Button(win, text="Испытать удачу", command=lucky, fg='white', bg='red').grid(row=10, column=1, columnspan=10,sticky="nsew")
-but_1 = Button(win, text="Начать заново", command=start, fg='white', bg='red').grid(row=11, column=1, columnspan=10,sticky="nsew")
+but_1 = Button(win, text="Испытать удачу", command=lucky, fg='white', bg='red').grid(row=10, column=1, columnspan=10,sticky="nsew") # непонятные названия переменных
+but_1 = Button(win, text="Начать заново", command=start, fg='white', bg='red').grid(row=11, column=1, columnspan=10,sticky="nsew") # непонятные названия переменных
 
 
 win.mainloop()
+
+
+"""
+В целом, неплохо, есть вопросы по стилю написания.
+
+Что подправить:
+1) Папка .idea левая. Хз откуда она и зачем. Лучше убрать. В Гите не должно быть мертвого кода
+2) Переименовать файл точки входа (посмотри конструкцию if __name__ == '__main__')
+3) Запустить линтеры минимум: flake8, но лучше wemake-python-styleguide
+4) Названия переменных нужны более говорящие
+5) От глобальных переменных лучше вообще отказаться
+6) Попробовать подругому разбить на функции
+7) Попробовать разбить пронрамму на несколько файлов
+8) Не вижу бинарного поиска. Посмотри алгоритм, и на отдельную кнопку сделай вывод кол-во итераций
+за которое алгоритм найдет заданное число
+9) Почитать PEP8 https://peps.python.org/pep-0008/#introduction
+
+"""
